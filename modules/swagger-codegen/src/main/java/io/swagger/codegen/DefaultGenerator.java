@@ -828,6 +828,11 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
           i'm assuming "location" == "in"
         */
         Set<String> operationParameters = new HashSet<String>();
+        
+        if (operation.getParameters() == null) {
+        	operation.setParameters(new ArrayList<Parameter>());
+        }
+        
         if (operation.getParameters() != null) {
             for (Parameter parameter : operation.getParameters()) {
                 operationParameters.add(generateParameterId(parameter));

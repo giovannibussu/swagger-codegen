@@ -205,7 +205,7 @@ public class ModelUtils {
                 }
             }
             if (enumName != null) {
-                var.defaultValue = String.format("%s.%s", enumName, var.datatypeWithEnum);
+                var.defaultValue = String.format("%s.%s", var.datatypeWithEnum, enumName);
             }
         }
     }

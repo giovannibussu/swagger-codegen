@@ -1733,6 +1733,8 @@ public class DefaultCodegen implements CodegenConfig {
             codegenOperation.vendorExtensions.putAll(operation.getExtensions());
         }
 
+        
+        
         String operationId = getOrGenerateOperationId(operation, path, httpMethod);
         // remove prefix in operationId
         if (removeOperationIdPrefix) {
