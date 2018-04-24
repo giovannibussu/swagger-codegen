@@ -6,8 +6,10 @@ package io.swagger.codegen.languages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.swagger.codegen.CodegenModel;
 import io.swagger.codegen.CodegenModelFactory;
 import io.swagger.codegen.CodegenModelType;
+import io.swagger.codegen.CodegenProperty;
 import io.swagger.codegen.LinkitCodegenOperation;
 import io.swagger.codegen.SupportingFile;
 
@@ -71,6 +73,10 @@ public class LinkitInflectorServerCodegen extends JavaInflectorServerCodegen {
 			importMapping.put("JsonTypeInfo", "org.codehaus.jackson.annotate.JsonTypeInfo");
 			importMapping.put("JsonCreator", "org.codehaus.jackson.annotate.JsonCreator");
 			importMapping.put("JsonValue", "org.codehaus.jackson.annotate.JsonValue");
+			
+	        importMapping.put("ApiModelProperty", null);
+	        importMapping.put("ApiModel", null);
+
 
 			supportingFiles.add(new SupportingFile("JSONSerializable.mustache",
 					(sourceFolder + '/' + modelPackage).replace(".", "/"), "JSONSerializable.java"));
@@ -90,5 +96,16 @@ public class LinkitInflectorServerCodegen extends JavaInflectorServerCodegen {
 		}
 
 	}
+	
+    @Override
+    public void postProcessModelProperty(CodegenModel model, CodegenProperty property) {
+        super.postProcessModelProperty(model, property);
+
+        //We don't use annotation
+        model.imports.remove("ApiModelProperty");
+        model.imports.remove("ApiModel");
+    }
+
+
 
 }
