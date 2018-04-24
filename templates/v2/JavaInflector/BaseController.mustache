@@ -1,0 +1,78 @@
+package {{apiPackage}};
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.openspcoop2.generic_project.exception.ServiceException;
+import org.openspcoop2.utils.rest.ProcessingException;
+import org.openspcoop2.utils.rest.ValidatorException;
+import org.openspcoop2.utils.rest.entity.Cookie;
+import org.openspcoop2.utils.rest.entity.TextHttpRequestEntity;
+import org.openspcoop2.utils.transport.http.HttpRequestMethod;
+import org.slf4j.Logger;
+import org.slf4j.MDC;
+
+/**
+ * @author Bussu Giovanni (bussu@link.it)
+ * @author  $Author: bussu $
+ * @version $ Rev: 12563 $, $Date: 22 feb 2018 $
+ * 
+ */
+public abstract class BaseController {
+
+	protected Logger log;
+	protected String nomeServizio;
+	protected HttpServletRequest request;
+	protected HttpServletResponse response;
+	private boolean validate;
+
+	public BaseController(String nomeServizio, Logger log) {
+		this(nomeServizio, log, true);
+	}
+
+	public BaseController(String nomeServizio, Logger log, boolean validate) {
+		this.log = log;
+		this.nomeServizio = nomeServizio;
+		this.validate = validate;
+	}
+	
+	public void setRequestResponse(HttpServletRequest request,HttpServletResponse response) {
+		this.response = response;
+		this.request = request;
+	}
+	
+	public HttpServletRequest getRequest() {
+		return this.request;
+	}
+
+	public void setRequest(HttpServletRequest request) {
+		this.request = request;
+	}
+
+	public HttpServletResponse getResponse() {
+		return this.response;
+	}
+
+	public void setResponse(HttpServletResponse response) {
+		this.response = response;
+	}
+
+	public int getVersione() {
+		return 1;
+	}
+	
+}
+

@@ -1,0 +1,39 @@
+package {{apiPackage}};
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import java.io.File;
+import java.util.List;
+
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
+
+import {{servicePackage}}.utils.IAutorizzato;
+
+import org.slf4j.Logger;
+
+import {{modelPackage}}.*;
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+{{#operations}}
+public class {{classname}} extends BaseController {
+
+     public {{classname}}(String nomeServizio,Logger log) {
+		super(nomeServizio,log);
+     }
+
+{{#operation}}
+
+    public Response {{operationId}}(IAutorizzato user, UriInfo uriInfo, HttpHeaders httpHeaders {{#allParams}}, {{#is this 'query-param'}}{{{dataType}}} {{paramName}}{{/is}}{{#is this 'path-param'}}{{{dataType}}} {{paramName}}{{/is}}{{#is this 'header-param'}}{{{dataType}}} {{paramName}}{{/is}}{{#is this 'body-param'}}java.io.InputStream is{{/is}}{{#is this 'form-param'}}{{#notFile}}java.io.InputStream is{{/notFile}}{{#is this 'file'}}FormDataContentDisposition fileDetail{{/is}}{{/is}}{{/allParams}}) {
+        return Response.status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" ).build();
+    }
+
+{{/operation}}
+}
+{{/operations}}
+

@@ -1,0 +1,49 @@
+package {{servicePackage}};
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.Map;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.MediaType;
+
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.UriInfo;
+
+import {{package}}.{{classname}}Controller;
+{{#useBeanValidation}}
+import javax.validation.constraints.*;
+import javax.validation.Valid;
+{{/useBeanValidation}}
+
+@Path("{{^useAnnotatedBasePath}}/{{classVarName}}{{/useAnnotatedBasePath}}{{#useAnnotatedBasePath}}{{contextPath}}{{/useAnnotatedBasePath}}")
+{{#addConsumesProducesJson}}
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+{{/addConsumesProducesJson}}
+public class {{classname}} extends BaseRsService{
+
+
+	private {{classname}}Controller controller = null;
+
+	public {{classname}}() {
+		super("{{classVarName}}");
+		this.controller = new {{classname}}Controller(this.nomeServizio,this.log);
+	}
+
+{{#operations}}
+{{#operation}}
+    @{{httpMethod}}
+    {{#subresourceOperation}}@Path("{{{path}}}"){{/subresourceOperation}}{{^subresourceOperation}}@Path("/"){{/subresourceOperation}}
+    {{#hasConsumes}}@Consumes({ {{#consumes}}"{{{mediaType}}}"{{#hasMore}}, {{/hasMore}}{{/consumes}} }){{/hasConsumes}}
+    {{#hasProduces}}@Produces({ {{#produces}}"{{{mediaType}}}"{{#hasMore}}, {{/hasMore}}{{/produces}} }){{/hasProduces}}
+    public Response {{operationId}}(@Context UriInfo uriInfo, @Context HttpHeaders httpHeaders{{#allParams}}, {{#is this 'query-param'}}@QueryParam("{{paramName}}") {{{dataType}}} {{paramName}}{{/is}}{{#is this 'path-param'}}@PathParam("{{paramName}}") {{{dataType}}} {{paramName}}{{/is}}{{#is this 'header-param'}}@HeaderParam("{{paramName}}") {{{dataType}}} {{paramName}}{{/is}}{{#is this 'body-param'}}java.io.InputStream is{{/is}}{{#is this 'form-param'}}{{#notFile}}java.io.InputStream is{{/notFile}}{{#is this 'file'}}FormDataContentDisposition fileDetail{{/is}}{{/is}}{{/allParams}}){
+        this.controller.setRequestResponse(this.request, this.response);
+        return this.controller.{{operationId}}(this.getUser(), uriInfo, httpHeaders{{#allParams}}, {{#is this 'query-param'}}{{paramName}}{{/is}}{{#is this 'path-param'}} {{paramName}}{{/is}}{{#is this 'header-param'}}{{paramName}}{{/is}}{{#is this 'body-param'}}is{{/is}}{{#is this 'form-param'}}{{#notFile}}is{{/notFile}}{{#is this 'file'}}fileDetail{{/is}}{{/is}}{{/allParams}});
+    }
+{{/operation}}
+}
+{{/operations}}
+

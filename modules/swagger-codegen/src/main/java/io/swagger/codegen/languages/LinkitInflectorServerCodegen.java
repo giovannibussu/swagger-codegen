@@ -49,6 +49,14 @@ public class LinkitInflectorServerCodegen extends JavaInflectorServerCodegen {
 				modelPackage = additionalProperties.get("modelPackage").toString();
 			}
 
+			String finalName = null;
+			if(!additionalProperties.containsKey("finalName")) {
+				additionalProperties.put("finalName", artifactId);
+			}
+					
+			String filterPackage = base + ".filter";
+			additionalProperties.put("filterPackage", filterPackage);
+			
 			if(!additionalProperties.containsKey("servicePackage")) {
 				additionalProperties.put("servicePackage", base + ".service");
 			}
@@ -90,6 +98,13 @@ public class LinkitInflectorServerCodegen extends JavaInflectorServerCodegen {
 					(sourceFolder + '/' + servicePackage + '/' + "utils").replace(".", "/"), "SimpleDateFormatUtils.java"));
 			supportingFiles.add(new SupportingFile("IAutorizzato.mustache",
 					(sourceFolder + '/' + servicePackage + '/' + "utils").replace(".", "/"), "IAutorizzato.java"));
+			supportingFiles.add(new SupportingFile("JaxRsActivator.mustache",
+					(sourceFolder + '/' + servicePackage).replace(".", "/"), "JaxRsActivator.java"));
+			supportingFiles.add(new SupportingFile("OriginFilter.mustache",
+					(sourceFolder + '/' + filterPackage).replace(".", "/"), "OriginFilter.java"));
+
+	        writeOptional(outputFolder, new SupportingFile("jboss-deployment-structure.mustache", "src/main/webapp/WEB-INF", "jboss-deployment-structure.xml"));
+	        writeOptional(outputFolder, new SupportingFile("log4j2.mustache", "src/main/resources", "log4j2.xml"));
 
 		} catch(Exception e) {
 			LOGGER.error("Errore init: "+ e.getMessage(), e);
