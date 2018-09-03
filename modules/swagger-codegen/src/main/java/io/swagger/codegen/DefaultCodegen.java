@@ -985,7 +985,7 @@ public class DefaultCodegen implements CodegenConfig {
     public String getTypeDeclaration(Schema schema) {
         String swaggerType = getSchemaType(schema);
         if (typeMapping.containsKey(swaggerType)) {
-            return typeMapping.get(swaggerType);
+			return typeMapping.get(swaggerType);
         }
         return swaggerType;
     }
@@ -1087,6 +1087,7 @@ public class DefaultCodegen implements CodegenConfig {
         } else {
             codegenModel.name = name;
         }
+        
         codegenModel.title = escapeText(schema.getTitle());
         codegenModel.description = escapeText(schema.getDescription());
         codegenModel.unescapedDescription = schema.getDescription();
@@ -1125,18 +1126,20 @@ public class DefaultCodegen implements CodegenConfig {
                 allRequired = new ArrayList<String>();
                 codegenModel.allVars = new ArrayList<CodegenProperty>();
                 int modelImplCnt = 0; // only one inline object allowed in a ComposedModel
-                for (Schema innerModel: composed.getAllOf()) {
-                    if (codegenModel.discriminator == null) {
-                        codegenModel.discriminator = schema.getDiscriminator();
-                    }
-                    if (innerModel.getXml() != null) {
-                        codegenModel.xmlPrefix = innerModel.getXml().getPrefix();
-                        codegenModel.xmlNamespace = innerModel.getXml().getNamespace();
-                        codegenModel.xmlName = innerModel.getXml().getName();
-                    }
-                    if (modelImplCnt++ > 1) {
-                        LOGGER.warn("More than one inline schema specified in allOf:. Only the first one is recognized. All others are ignored.");
-                        break; // only one ModelImpl with discriminator allowed in allOf
+                if(composed.getAllOf()!=null) {
+                    for (Schema innerModel: composed.getAllOf()) {
+                        if (codegenModel.discriminator == null) {
+                            codegenModel.discriminator = schema.getDiscriminator();
+                        }
+                        if (innerModel.getXml() != null) {
+                            codegenModel.xmlPrefix = innerModel.getXml().getPrefix();
+                            codegenModel.xmlNamespace = innerModel.getXml().getNamespace();
+                            codegenModel.xmlName = innerModel.getXml().getName();
+                        }
+                        if (modelImplCnt++ > 1) {
+                            LOGGER.warn("More than one inline schema specified in allOf:. Only the first one is recognized. All others are ignored.");
+                            break; // only one ModelImpl with discriminator allowed in allOf
+                        }
                     }
                 }
             } else {
@@ -1423,9 +1426,9 @@ public class DefaultCodegen implements CodegenConfig {
                 codegenProperty.getVendorExtensions().put(CodegenConstants.IS_DOUBLE_EXT_NAME, Boolean.TRUE);
             }
             if (propertySchema.getEnum() != null) {
-                List<Double> _enum = propertySchema.getEnum();
+                List<Number> _enum = propertySchema.getEnum();
                 codegenProperty._enum = new ArrayList<String>();
-                for(Double i : _enum) {
+                for(Number i : _enum) {
                     codegenProperty._enum.add(i.toString());
                 }
                 codegenProperty.getVendorExtensions().put(IS_ENUM_EXT_NAME, Boolean.TRUE);
@@ -1525,6 +1528,7 @@ public class DefaultCodegen implements CodegenConfig {
             }
             setNonArrayMapProperty(codegenProperty, type);
         }
+        
         return codegenProperty;
     }
 

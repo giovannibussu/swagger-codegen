@@ -1,5 +1,9 @@
 package io.swagger.codegen.languages;
 
+import static io.swagger.codegen.CodegenConstants.HAS_ENUMS_EXT_NAME;
+import static io.swagger.codegen.CodegenConstants.IS_ENUM_EXT_NAME;
+import static io.swagger.codegen.languages.helpers.ExtensionHelper.getBooleanValue;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,28 +14,12 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import com.github.jknack.handlebars.Handlebars;
-import io.swagger.codegen.languages.helpers.ExtensionHelper;
-import io.swagger.codegen.languages.helpers.JavaHelper;
-import io.swagger.codegen.languages.helpers.NoneExtensionHelper;
-import io.swagger.codegen.utils.ModelUtils;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.Operation;
-import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.media.ArraySchema;
-import io.swagger.v3.oas.models.media.IntegerSchema;
-import io.swagger.v3.oas.models.media.MapSchema;
-import io.swagger.v3.oas.models.media.NumberSchema;
-import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.media.StringSchema;
-import io.swagger.v3.oas.models.responses.ApiResponse;
-import io.swagger.v3.parser.util.SchemaTypeUtil;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jknack.handlebars.Handlebars;
 import com.google.common.base.Strings;
 
 import io.swagger.codegen.CliOption;
@@ -42,10 +30,19 @@ import io.swagger.codegen.CodegenOperation;
 import io.swagger.codegen.CodegenParameter;
 import io.swagger.codegen.CodegenProperty;
 import io.swagger.codegen.DefaultCodegen;
-
-import static io.swagger.codegen.CodegenConstants.HAS_ENUMS_EXT_NAME;
-import static io.swagger.codegen.CodegenConstants.IS_ENUM_EXT_NAME;
-import static io.swagger.codegen.languages.helpers.ExtensionHelper.getBooleanValue;
+import io.swagger.codegen.languages.helpers.JavaHelper;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.ComposedSchema;
+import io.swagger.v3.oas.models.media.IntegerSchema;
+import io.swagger.v3.oas.models.media.MapSchema;
+import io.swagger.v3.oas.models.media.NumberSchema;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.StringSchema;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.parser.util.SchemaTypeUtil;
 
 /**
  * new version of this class can be found on: https://github.com/swagger-api/swagger-codegen-templates
@@ -815,7 +812,8 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
                 // LOGGER.error("No Type defined.", new Exception());
             }
         }
-        return toModelName(swaggerType);
+
+		return toModelName(swaggerType);
     }
 
     @Override
@@ -840,9 +838,9 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
     @Override
     public CodegenModel fromModel(String name, Schema schema, Map<String, Schema> allSchemas) {
         CodegenModel codegenModel = super.fromModel(name, schema, allSchemas);
-        if(codegenModel.description != null) {
-            codegenModel.imports.add("ApiModel");
-        }
+//        if(codegenModel.description != null) {
+//            codegenModel.imports.add("ApiModel");
+//        }
         if (codegenModel.discriminator != null && additionalProperties.containsKey("jackson")) {
             codegenModel.imports.add("JsonSubTypes");
             codegenModel.imports.add("JsonTypeInfo");
